@@ -30,7 +30,6 @@ body {
     position: relative;
 }
 
-/* Sidebar styles */
 .sidebar {
     position: fixed;
     top: 0;
@@ -400,13 +399,21 @@ body {
 body.keyboard-visible .input-container {
   position: fixed;
   bottom: 0;
+  left: 0;
   width: 100%;
+  z-index: 1000;
+  transition: bottom 0.1s ease;
 }
 
 body.keyboard-visible .chat-container {
-  padding-bottom: 70px; 
+  padding-bottom: 70px;
 }
 
+@supports (-webkit-appearance:none) and (not (overflow:-webkit-marquee)) and (not (-ms-ime-align:auto)) and (not (-moz-appearance:none)) {
+  body.keyboard-visible .input-container {
+    position: absolute;
+  }
+}
 .input-container {
   transition: bottom 0.3s ease;
 }
