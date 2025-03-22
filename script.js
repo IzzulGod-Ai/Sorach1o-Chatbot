@@ -25,11 +25,12 @@ async function getAPIKey() {
         let conversations = {};
         let isProcessing = false;
 
-        function initApp() {
-            loadConversations();
-            setupEventListeners();
-            autoResizeTextarea();
-        }
+    function initApp() {
+  loadConversations();
+  setupEventListeners();
+  autoResizeTextarea();
+  handleAndroidKeyboard(); 
+}
 
         function loadConversations() {
             const savedConversations = localStorage.getItem('conversations');
@@ -67,11 +68,38 @@ async function getAPIKey() {
 function handleInputBlur() {
   document.body.classList.remove('keyboard-visible');
 }
-           
+
+// Add these functions to your script.js file
+
+function handleAndroidKeyboard() {
+  const viewport = window.visualViewport;
+  
+  if (viewport) {
+    viewport.addEventListener('resize', () => {
+      const currentHeight = viewport.height;
+      const windowHeight = window.innerHeight;
+      
+      if (windowHeight - currentHeight > 150) {
+        document.body.classList.add('keyboard-visible');
+        
+        const inputContainer = document.querySelector('.input-container');
+        inputContainer.style.bottom = `${windowHeight - currentHeight - viewport.offsetTop}px`;
+        
+        setTimeout(() => {
+          scrollToBottom();
+        }, 100);
+      } else {
+        document.body.classList.remove('keyboard-visible');
+        document.querySelector('.input-container').style.bottom = '0';
+      }
+    });
+  }
+}
+
 function scrollToBottom() {
   chatContainer.scrollTop = chatContainer.scrollHeight;
-    
-  if (document.body.classList.contains('keyboard-visible') && window.innerWidth <= 768) {
+  
+  if (document.body.classList.contains('keyboard-visible')) {
     window.scrollTo({
       top: document.body.scrollHeight,
       behavior: 'smooth'
