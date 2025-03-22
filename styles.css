@@ -147,6 +147,7 @@ body {
     position: relative;
     width: 100%;
     min-height: 0;
+    overflow: hidden;
 }
 
 .header {
@@ -187,6 +188,7 @@ body {
     scroll-behavior: smooth;
     width: 100%;
     min-height: 0;
+    position: relative;
 }
 
 .chat-container::-webkit-scrollbar {
@@ -206,6 +208,16 @@ body {
     align-items: center;
     text-align: center;
     padding: 15px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+}
+
+.welcome-screen > * {
+    pointer-events: auto;
 }
 
 .logo-large {
@@ -407,6 +419,7 @@ body.keyboard-visible .input-container {
 
 body.keyboard-visible .chat-container {
   padding-bottom: 70px;
+  height: calc(100% - 70px);
 }
 
 @supports (-webkit-appearance:none) and (not (overflow:-webkit-marquee)) and (not (-ms-ime-align:auto)) and (not (-moz-appearance:none)) {
