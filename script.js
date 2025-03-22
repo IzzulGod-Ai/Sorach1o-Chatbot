@@ -30,6 +30,12 @@ async function getAPIKey() {
   setupEventListeners();
   autoResizeTextarea();
   handleAndroidKeyboard(); 
+
+  if (!currentChatId) {
+      welcomeScreen.style.display = 'flex';
+  } else {
+      welcomeScreen.style.display = 'none';
+  }
 }
 
         function loadConversations() {
@@ -58,8 +64,9 @@ async function getAPIKey() {
                 }
             });
             
-            function handleInputFocus() {
+          function handleInputFocus() {
   document.body.classList.add('keyboard-visible');
+  welcomeScreen.style.display = 'none'; // Add this
   setTimeout(() => {
     scrollToBottom();
   }, 300);
@@ -67,9 +74,12 @@ async function getAPIKey() {
             
 function handleInputBlur() {
   document.body.classList.remove('keyboard-visible');
+  // Only show welcome screen if no chat is active
+  if (!currentChatId) {
+    welcomeScreen.style.display = 'flex'; // Add this
+  }
 }
 
-// Add these functions to your script.js file
 
 function handleAndroidKeyboard() {
   const viewport = window.visualViewport;
@@ -190,11 +200,11 @@ function scrollToBottom() {
             chatContainer.innerHTML = '';
             
             if (!currentChatId) {
-                chatContainer.appendChild(welcomeScreen);
+                welcomeScreen.style.display = 'flex';
                 return;
             }
             
-            welcomeScreen.remove();
+            welcomeScreen.style.display = 'none';
             
             const chat = conversations[currentChatId];
             if (!chat) return;
