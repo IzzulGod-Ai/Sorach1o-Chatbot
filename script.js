@@ -250,6 +250,42 @@ async function handleSendMessage() {
     }
 }
 
+function protectMathExpressions(text) {
+    const mathExpressions = [];
+    
+    const placeholderPrefix = "__MATH_EXPR_";
+    let counter = 0;
+    
+    function replaceMathWithPlaceholder(match) {
+        const placeholder = `${placeholderPrefix}${counter++}__`;
+        mathExpressions.push({
+            placeholder: placeholder,
+            expression: match
+        });
+        return placeholder;
+    }
+    
+    let processedText = text.replace(/\$\$([\s\S]*?)\$\$/g, replaceMathWithPlaceholder);
+    
+    processedText = processedText.replace(/\$([^\$\n]+?)\$/g, replaceMathWithPlaceholder);
+    
+    processedText = processedText.replace(/\\\[([\s\S]*?)\\\]/g, replaceMathWithPlaceholder);
+    
+    processedText = processedText.replace(/\\\(([\s\S]*?)\\\)/g, replaceMathWithPlaceholder);
+    
+    return { processedText, mathExpressions };
+}
+
+function restoreMathExpressions(text, mathExpressions) {
+    let restoredText = text;
+    
+    mathExpressions.forEach(({ placeholder, expression }) => {
+        restoredText = restoredText.replace(placeholder, expression);
+    });
+    
+    return restoredText;
+}
+
 function addMessageToUI(role, content) {
     const messageDiv = document.createElement('div');
     messageDiv.className = 'chat-message';
@@ -265,8 +301,12 @@ function addMessageToUI(role, content) {
             </div>
         `;
     } else {
-        const preprocessedContent = preprocessMathDelimiters(content);
-        const markedContent = marked.parse(preprocessedContent);
+    
+        const { processedText, mathExpressions } = protectMathExpressions(content);
+        
+        const markedContent = marked.parse(processedText);
+        
+        const restoredContent = restoreMathExpressions(markedContent, mathExpressions);
         
         messageDiv.innerHTML = `
             <div class="message-ai">
@@ -274,7 +314,7 @@ function addMessageToUI(role, content) {
                     <img src="images/ai-avatar.png" alt="AI" class="avatar" id="aiAvatar">
                     <strong>Sorach1o</strong>
                 </div>
-                <div class="message-content markdown-body">${markedContent}</div>
+                <div class="message-content markdown-body">${restoredContent}</div>
             </div>
         `;
     }
@@ -287,49 +327,27 @@ function addMessageToUI(role, content) {
     
     if (role === 'assistant') {
         try {
-            renderMathInElement(messageDiv.querySelector('.message-content'), {
-                delimiters: [
-                    {left: '$$', right: '$$', display: true},
-                    {left: '$', right: '$', display: false},
-                    {left: '\\(', right: '\\)', display: false},
-                    {left: '\\[', right: '\\]', display: true}
-                ],
-                throwOnError: false,
-                output: 'html',
-                trust: true,
-                strict: false
-            });
+            
+            setTimeout(() => {
+                renderMathInElement(messageDiv.querySelector('.message-content'), {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '$', right: '$', display: false},
+                        {left: '\\(', right: '\\)', display: false},
+                        {left: '\\[', right: '\\]', display: true}
+                    ],
+                    throwOnError: false,
+                    output: 'html',
+                    trust: true,
+                    strict: false
+                });
+            }, 50);
         } catch (error) {
             console.error('Error rendering math:', error);
         }
     }
     
     scrollToBottom();
-}
-
-function preprocessMathDelimiters(text) {
-    const mathExpressions = [];
-    let counter = 0;
-    
-    text = text.replace(/\$\$([\s\S]*?)\$\$/g, function(match, content) {
-        const placeholder = `MATH_PLACEHOLDER_${counter++}`;
-        mathExpressions.push({placeholder, content: match});
-        return placeholder;
-    });
-    
-    text = text.replace(/\$([^\$\n]+?)\$/g, function(match, content) {
-        const placeholder = `MATH_PLACEHOLDER_${counter++}`;
-        mathExpressions.push({placeholder, content: match});
-        return placeholder;
-    });
-    
-    let processedText = text;
-    
-    mathExpressions.forEach(({placeholder, content}) => {
-        processedText = processedText.replace(placeholder, content);
-    });
-    
-    return processedText;
 }
 
 async function getAIResponse(messages) {
