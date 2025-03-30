@@ -261,12 +261,63 @@ function addMessageToUI(role, content) {
                     <img src="images/user-avatar.png" alt="User" class="avatar" id="userAvatar">
                     <strong>You</strong>
                 </div>
-                <div class="message-content">${content}</div>
+                <div class="message-content">${escapeHtml(content)}</div>
             </div>
         `;
     } else {
-        const preprocessedContent = preprocessMathDelimiters(content);
-        const markedContent = marked.parse(preprocessedContent);
+        
+        const tempDiv = document.createElement('div');
+        
+        const mathPlaceholders = [];
+        let processedContent = content;
+        
+        processedContent = processedContent.replace(/\$\$([\s\S]*?)\$\$/g, function(match, p1, offset) {
+            const placeholder = `__MATH_DISPLAY_${mathPlaceholders.length}__`;
+            mathPlaceholders.push({
+                placeholder: placeholder,
+                content: match,
+                isDisplay: true
+            });
+            return placeholder;
+        });
+        
+        processedContent = processedContent.replace(/\$([^\$\n]+?)\$/g, function(match, p1, offset) {
+            const placeholder = `__MATH_INLINE_${mathPlaceholders.length}__`;
+            mathPlaceholders.push({
+                placeholder: placeholder,
+                content: match,
+                isDisplay: false
+            });
+            return placeholder;
+        });
+
+        processedContent = processedContent.replace(/\\int/g, '$\\int$');
+        processedContent = processedContent.replace(/\\frac/g, '$\\frac$');
+        processedContent = processedContent.replace(/\\cdot/g, '$\\cdot$');
+        
+        tempDiv.innerHTML = marked.parse(processedContent);
+        
+        const restoreContent = (node) => {
+            if (node.nodeType === Node.TEXT_NODE) {
+                let content = node.textContent;
+                let changed = false;
+                
+                for (const placeholderObj of mathPlaceholders) {
+                    if (content.includes(placeholderObj.placeholder)) {
+                        changed = true;
+                        content = content.replace(placeholderObj.placeholder, placeholderObj.content);
+                    }
+                }
+                
+                if (changed) {
+                    node.textContent = content;
+                }
+            } else if (node.nodeType === Node.ELEMENT_NODE) {
+                Array.from(node.childNodes).forEach(restoreContent);
+            }
+        };
+        
+        restoreContent(tempDiv);
         
         messageDiv.innerHTML = `
             <div class="message-ai">
@@ -274,7 +325,7 @@ function addMessageToUI(role, content) {
                     <img src="images/ai-avatar.png" alt="AI" class="avatar" id="aiAvatar">
                     <strong>Sorach1o</strong>
                 </div>
-                <div class="message-content markdown-body">${markedContent}</div>
+                <div class="message-content markdown-body">${tempDiv.innerHTML}</div>
             </div>
         `;
     }
@@ -307,29 +358,10 @@ function addMessageToUI(role, content) {
     scrollToBottom();
 }
 
-function preprocessMathDelimiters(text) {
-    const mathExpressions = [];
-    let counter = 0;
-    
-    text = text.replace(/\$\$([\s\S]*?)\$\$/g, function(match, content) {
-        const placeholder = `MATH_PLACEHOLDER_${counter++}`;
-        mathExpressions.push({placeholder, content: match});
-        return placeholder;
-    });
-    
-    text = text.replace(/\$([^\$\n]+?)\$/g, function(match, content) {
-        const placeholder = `MATH_PLACEHOLDER_${counter++}`;
-        mathExpressions.push({placeholder, content: match});
-        return placeholder;
-    });
-    
-    let processedText = text;
-    
-    mathExpressions.forEach(({placeholder, content}) => {
-        processedText = processedText.replace(placeholder, content);
-    });
-    
-    return processedText;
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
 }
 
 async function getAIResponse(messages) {
