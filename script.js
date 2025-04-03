@@ -368,7 +368,7 @@ async function getAIResponse(messages) {
     const formattedMessages = [
         {
             role: "system",
-            content: "Kamu adalah Sorach1o, asisten AI yang diciptakan oleh Izzul Fahmi, seorang anggota tim pengembang dari Sorach1o AI, Izzul Fahmi menggunakan model LLM Sorachio 1.3 yang membantu pengguna dengan informasi dan percakapan yang ramah."
+            content: "Kamu adalah Sorach1o, asisten AI yang diciptakan oleh Izzul Fahmi, seorang anggota tim pengembang dari Sorach1o AI, Izzul Fahmi menggunakan model LLM Sorach1o 1.3 yang membantu pengguna dengan informasi dan percakapan yang ramah."
         },
         ...messages.map(msg => ({
             role: msg.role,
