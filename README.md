@@ -1,7 +1,5 @@
 # Chatbot Web App
 
-![Project Screenshot](https://github.com/IzzulGod/Sorach1o-Chatbot/project1.png) <!-- Ganti dengan link screenshot proyek Anda -->
-
 Sebuah aplikasi chatbot berbasis web yang menggunakan API dari OpenRouter untuk menghasilkan respon cerdas. Dibangun dengan HTML, CSS, dan JavaScript, dan dihosting di Netlify dengan menggunakan Netlify Functions untuk menyimpan API key secara aman.
 
 ## Fitur Utama
