@@ -1,4 +1,4 @@
-# Chatbot Web App
+# Sorach1o - Chatbot AI
 
 Sebuah aplikasi chatbot berbasis web yang menggunakan API dari OpenRouter untuk menghasilkan respon cerdas. Dibangun dengan HTML, CSS, dan JavaScript, dan dihosting di Netlify dengan menggunakan Netlify Functions untuk menyimpan API key secara aman.
 
