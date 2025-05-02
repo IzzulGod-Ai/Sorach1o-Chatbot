@@ -1,4 +1,4 @@
-# Sorach1o - AI Chatbot Platform
+# Sorach1o - AI Chatbot
 
 Sorach1o is a sophisticated web-based chatbot application that leverages the OpenRouter API to deliver intelligent, contextually relevant responses. Built with modern web technologies and hosted on Netlify, this application offers a seamless conversational AI experience while maintaining security best practices through serverless functions.
 
@@ -25,7 +25,7 @@ Sorach1o is a sophisticated web-based chatbot application that leverages the Ope
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/username/reponame.git
+   git clone https://github.com/IzzulGod/Sorach1o-Chatbot.git
    ```
 
 2. Navigate to the project directory:
