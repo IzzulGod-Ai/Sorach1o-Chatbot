@@ -100,11 +100,3 @@ Contributions are welcome and appreciated. To contribute:
 5. Open a Pull Request
 
 For major changes, please open an issue first to discuss what you would like to change.
-
-## License
-
-This project is licensed under the [MIT License](https://choosealicense.com/licenses/mit/) - see the LICENSE file for details.
-
----
-
-Developed by [Izzul God] | [Your Website/GitHub Profile](https://github.com/yourusername)
