@@ -1,102 +1,133 @@
-# Sorach1o - AI Chatbot
+# Sorachio - AI Assistant
 
-Sorach1o is a sophisticated web-based chatbot application that leverages the OpenRouter API to deliver intelligent, contextually relevant responses. Built with modern web technologies and hosted on Netlify, this application offers a seamless conversational AI experience while maintaining security best practices through serverless functions.
+<div align="center">
+  <img src="images/logo.png" alt="Sorachio Logo" width="120">
+  <h3>A personal AI assistant built with OpenRouter API</h3>
+  <p>Created by <a href="https://github.com/IzzulGod">Izzul Fahmi</a></p>
+</div>
 
-## Key Features
+## 📝 Overview
 
-- **Intelligent Conversation Engine**: Engage with a powerful AI chatbot powered by state-of-the-art language models via OpenRouter API
-- **Comprehensive Conversation Management**:
-  - Create new chat sessions instantly with the "New Chat" button
-  - Access and navigate through your conversation history via the intuitive sidebar
-  - Delete unnecessary conversations to maintain a clean interface
-- **Enterprise-Grade Security**: API credentials securely stored using Netlify's serverless functions architecture
-- **Responsive Design**: Optimized user experience across all devices - from desktop workstations to mobile phones
+Sorachio is a responsive web-based AI assistant that leverages the DeepSeek Chat model through OpenRouter's API. It provides an intuitive chat interface similar to popular AI assistants while maintaining conversation history and context.
 
-## Technology Stack
+## ✨ Features
 
-| Component | Technologies |
-|-----------|-------------|
-| Frontend | HTML5, CSS3, JavaScript (ES6+) |
-| Backend | Netlify Functions (Serverless) |
-| AI Integration | OpenRouter API |
-| Deployment | Netlify Continuous Deployment |
+- **Modern & Responsive UI**: Works seamlessly across desktop and mobile devices
+- **Conversation Memory**: Remembers chat context and previous conversations
+- **Markdown Support**: Full markdown rendering including code syntax highlighting
+- **Mathematical Notation**: LaTeX math rendering with KaTeX
+- **Chat History Management**: Save, access, and delete past conversations
+- **Smart Conversation Summarization**: Automatically summarizes long conversations for better context awareness
+- **Memory Management**: Efficiently handles large conversations to stay within token limits
 
-## Local Development Setup
+## 🔧 Technologies Used
+
+- **Frontend**: HTML, CSS, JavaScript (Vanilla)
+- **API Integration**: OpenRouter API with DeepSeek Chat model
+- **Code Highlighting**: highlight.js
+- **Markdown Parsing**: marked.js
+- **Math Rendering**: KaTeX
+- **Icons**: Font Awesome
+
+## 📱 Responsive Design
+
+Sorachio is designed to work beautifully on all devices:
+- Desktop-optimized layout
+- Mobile-responsive interface
+- Virtual keyboard handling for mobile devices
+- Smooth scrolling and animations
+
+## 💬 Conversation Features
+
+- Real-time typing indicators
+- Message history with user/AI avatars
+- Code syntax highlighting
+- Math equation rendering
+- Auto-expanding text input
+- Local storage for conversation persistence
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- API key from [OpenRouter](https://openrouter.ai/)
+- Basic Netlify account for serverless functions (optional)
+
+### Setup
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/IzzulGod/Sorach1o-Chatbot.git
+   git clone https://github.com/IzzulGod/sorachio.git
+   cd sorachio
    ```
 
-2. Navigate to the project directory:
-   ```bash
-   cd reponame
+2. Configure your API key:
+   - For local development, create a `.env` file with your OpenRouter API key
+   - For production, set up environment variables in your hosting provider
+
+3. Deploy to your hosting provider of choice (Netlify recommended for serverless function support)
+
+## 🔒 API Key Management
+
+The application uses a serverless function to securely manage the API key. This keeps your API key hidden from client-side code.
+
+## 📦 Project Structure
+
+```
+sorachio/
+├── images/            # Logo and avatar images
+├── index.html         # Main HTML structure
+├── styles.css         # Styling for all components
+├── script.js          # Core application logic
+└── netlify/functions/ # Serverless functions for API key management
+```
+
+## 🛠️ Customization
+
+You can easily customize Sorachio by:
+
+1. Changing the logo and avatars:
+   ```javascript
+   customizeLogo('path/to/your/logo.png');
+   customizeAvatars('path/to/user/avatar.png', 'path/to/ai/avatar.png');
    ```
 
-3. Install dependencies:
-   ```bash
-   npm install
+2. Modifying the system prompt:
+   ```javascript
+   // In script.js
+   contextMessages.push({
+     role: "system",
+     content: "Your custom system prompt here..."
+   });
    ```
 
-4. Install Netlify CLI (if not already installed):
-   ```bash
-   npm install -g netlify-cli
+3. Adjusting the theme colors in CSS variables:
+   ```css
+   :root {
+     --accent-color: #your-brand-color;
+     /* other variables */
+   }
    ```
 
-5. Create a local environment configuration:
-   ```bash
-   # Create .env file in the root directory
-   echo "OPENROUTER_API_KEY=your_api_key_here" > .env
-   ```
+## 📄 License
 
-6. Start the development server:
-   ```bash
-   netlify dev
-   ```
+This project is available as open source under the terms of the MIT License.
 
-7. Access the application at `http://localhost:8888`
+## 🙏 Acknowledgements
 
-## Deployment Configuration
+- [OpenRouter](https://openrouter.ai/) for API access
+- [DeepSeek](https://deepseek.ai/) for the language model
+- [highlight.js](https://highlightjs.org/) for code syntax highlighting
+- [marked.js](https://marked.js.org/) for markdown parsing
+- [KaTeX](https://katex.org/) for math rendering
+- [Font Awesome](https://fontawesome.com/) for icons
 
-### Environment Variables
+## 📞 Contact
 
-For production deployment, configure the following environment variables in your Netlify dashboard:
+For more information about this project and other works, please visit [GitHub](https://github.com/IzzulGod).
 
-1. Navigate to Site settings > Build & deploy > Environment
-2. Add the required variable:
-   - `OPENROUTER_API_KEY`: Your OpenRouter API authentication key
+---
 
-### Deployment Steps
-
-1. Connect your GitHub repository to Netlify
-2. Configure build settings:
-   - Build command: `npm run build` (if applicable)
-   - Publish directory: `dist` or your output directory
-3. Deploy the site
-
-## Live Demo
-
-Experience Sorach1o in action: [https://sorachio.netlify.app](https://sorachio.netlify.app)
-
-## Screenshots
-
-*(Consider adding screenshots of your application here)*
-
-## Roadmap
-
-- [ ] Implement user authentication system
-- [ ] Add support for additional AI models
-- [ ] Develop conversation export functionality
-- [ ] Enhance UI with customizable themes
-
-## Contributing
-
-Contributions are welcome and appreciated. To contribute:
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-For major changes, please open an issue first to discuss what you would like to change.
+<div align="center">
+  <p>Made with ❤️ by Izzul Fahmi</p>
+</div>
