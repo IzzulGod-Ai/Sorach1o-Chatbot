@@ -128,6 +128,3 @@ For more information about this project and other works, please visit [GitHub](h
 
 ---
 
-<div align="center">
-  <p>Made with ❤️ by Izzul Fahmi</p>
-</div>
