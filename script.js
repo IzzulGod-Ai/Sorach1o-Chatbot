@@ -6,6 +6,7 @@ async function getAPIKey() {
 
 const MODEL = "deepseek/deepseek-chat:free";
 const API_URL = "https://openrouter.ai/api/v1/chat/completions";
+const MEMORY_LIMIT = 10; // Number of message pairs to remember
 
 const chatContainer = document.getElementById('chatContainer');
 const welcomeScreen = document.getElementById('welcomeScreen');
@@ -104,7 +105,9 @@ function createNewChat() {
     conversations[currentChatId] = {
         id: currentChatId,
         title: 'New Chat',
-        messages: []
+        messages: [],
+        summary: '',
+        lastActive: Date.now()
     };
     
     saveConversations();
@@ -119,6 +122,13 @@ function createNewChat() {
 
 function loadChat(chatId) {
     currentChatId = chatId;
+    
+    // Update lastActive timestamp when loading a chat
+    if (conversations[currentChatId]) {
+        conversations[currentChatId].lastActive = Date.now();
+        saveConversations();
+    }
+    
     renderChat();
     
     if (sidebar.classList.contains('open')) {
@@ -143,7 +153,12 @@ function deleteChat(chatId, event) {
 function renderChatHistory() {
     chatHistory.innerHTML = '';
     
-    Object.values(conversations).forEach(chat => {
+    // Sort chats by lastActive timestamp (most recent first)
+    const sortedChats = Object.values(conversations).sort((a, b) => {
+        return (b.lastActive || 0) - (a.lastActive || 0);
+    });
+    
+    sortedChats.forEach(chat => {
         const historyItem = document.createElement('div');
         historyItem.className = 'history-item';
         historyItem.innerHTML = `
@@ -180,12 +195,63 @@ function renderChat() {
     scrollToBottom();
 }
 
+// Generate a summary of the conversation for memory purposes
+async function generateChatSummary(chat) {
+    if (chat.messages.length < 4) {
+        return ''; // Not enough messages to summarize yet
+    }
+    
+    try {
+        const API_KEY = await getAPIKey();
+        const lastMessages = chat.messages.slice(-6); // Use last 6 messages for context
+        
+        const summaryPrompt = [
+            {
+                role: "system",
+                content: "Berikan ringkasan singkat dari percakapan ini dalam 1-2 kalimat. Fokus pada topik utama dan informasi penting."
+            },
+            ...lastMessages
+        ];
+        
+        const response = await fetch(API_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${API_KEY}`
+            },
+            body: JSON.stringify({
+                model: MODEL,
+                messages: summaryPrompt,
+                temperature: 0.7,
+                max_tokens: 100
+            })
+        });
+        
+        const data = await response.json();
+        
+        if (!response.ok) {
+            console.error('Failed to generate summary:', data.error?.message);
+            return '';
+        }
+        
+        return data.choices[0].message.content;
+    } catch (error) {
+        console.error('Error generating summary:', error);
+        return '';
+    }
+}
+
 async function handleSendMessage() {
     const message = messageInput.value.trim();
     if (!message || isProcessing) return;
     
     messageInput.value = '';
     messageInput.style.height = 'auto';
+    
+    // Dismiss keyboard on mobile
+    if (window.innerWidth <= 768) {
+        messageInput.blur();
+    }
     
     if (!currentChatId) {
         createNewChat();
@@ -199,13 +265,15 @@ async function handleSendMessage() {
         content: message
     });
     
+    // Update last active timestamp
+    chat.lastActive = Date.now();
+    
     if (chat.messages.length === 1) {
         chat.title = message.substring(0, 30);
         if (message.length > 30) chat.title += '...';
-        saveConversations();
-    } else {
-        saveConversations();
     }
+    
+    saveConversations();
     
     const typingIndicator = document.createElement('div');
     typingIndicator.className = 'chat-message';
@@ -213,7 +281,7 @@ async function handleSendMessage() {
         <div class="message-ai">
             <div class="message-header">
                 <img src="images/ai-avatar.png" alt="AI" class="avatar" id="aiAvatar">
-                <strong>Sorach1o</strong>
+                <strong>Sorachio</strong>
             </div>
             <div class="typing-indicator">
                 <span class="typing-dot"></span>
@@ -227,7 +295,7 @@ async function handleSendMessage() {
     
     isProcessing = true;
     try {
-        const response = await getAIResponse(chat.messages);
+        const response = await getAIResponse(chat);
         
         chatContainer.removeChild(typingIndicator);
         
@@ -236,6 +304,11 @@ async function handleSendMessage() {
             role: 'assistant',
             content: response
         });
+        
+        // Generate/update conversation summary after every 4 messages
+        if (chat.messages.length % 4 === 0) {
+            chat.summary = await generateChatSummary(chat);
+        }
         
         saveConversations();
     } catch (error) {
@@ -364,13 +437,40 @@ function escapeHtml(text) {
     return div.innerHTML;
 }
 
-async function getAIResponse(messages) {
-    const formattedMessages = [
-        {
+async function getAIResponse(chat) {
+    // Create a context window with memory of past conversations
+    let contextMessages = [];
+    
+    // Include conversation summary if available to provide memory context
+    if (chat.summary) {
+        contextMessages.push({
             role: "system",
-            content: "Kamu adalah Sorach1o, asisten AI yang diciptakan oleh Izzul Fahmi sebagai proyek pribadi nya, yang membantu pengguna dengan informasi dan percakapan yang ramah. jika user ingin tahu lebih lanjut maka arahkan le https://github.com/IzzulGod untuk info lebih lanjut terkait proyek ini."
-        },
-        ...messages.map(msg => ({
+            content: `Ringkasan percakapan sebelumnya: ${chat.summary}`
+        });
+    }
+    
+    // Add system prompt
+    contextMessages.push({
+        role: "system",
+        content: "Kamu adalah Sorachio, asisten AI yang diciptakan oleh Izzul Fahmi sebagai proyek pribadi nya, yang membantu pengguna dengan informasi dan percakapan yang ramah. jika user ingin tahu lebih lanjut maka arahkan le https://github.com/IzzulGod untuk info lebih lanjut terkait proyek ini."
+    });
+    
+    // Get messages for context window
+    let messagesToInclude;
+    if (chat.messages.length <= MEMORY_LIMIT * 2) {
+        // If message count is small, include all messages
+        messagesToInclude = chat.messages;
+    } else {
+        // Otherwise, use first 2 messages + last (MEMORY_LIMIT*2-2) messages
+        const firstMessages = chat.messages.slice(0, 2);
+        const recentMessages = chat.messages.slice(-(MEMORY_LIMIT * 2 - 2));
+        messagesToInclude = [...firstMessages, ...recentMessages];
+    }
+    
+    // Add conversation messages
+    contextMessages = [
+        ...contextMessages,
+        ...messagesToInclude.map(msg => ({
             role: msg.role,
             content: msg.content
         }))
@@ -386,7 +486,7 @@ async function getAIResponse(messages) {
         },
         body: JSON.stringify({
             model: MODEL,
-            messages: formattedMessages,
+            messages: contextMessages,
             temperature: 0.7,
             max_tokens: 2000
         })
