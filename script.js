@@ -323,7 +323,7 @@ function addMessageToUI(role, content) {
             <div class="message-ai">
                 <div class="message-header">
                     <img src="images/ai-avatar.png" alt="AI" class="avatar" id="aiAvatar">
-                    <strong>Sorach1o</strong>
+                    <strong>Sorachio</strong>
                 </div>
                 <div class="message-content markdown-body">${tempDiv.innerHTML}</div>
             </div>
@@ -368,7 +368,7 @@ async function getAIResponse(messages) {
     const formattedMessages = [
         {
             role: "system",
-            content: "Kamu adalah Sorach1o, asisten AI yang diciptakan oleh Izzul Fahmi, seorang anggota tim pengembang dari Sorach1o AI, Izzul Fahmi menggunakan model LLM Sorach1o 1.3 yang membantu pengguna dengan informasi dan percakapan yang ramah."
+            content: "Kamu adalah Sorach1o, asisten AI yang diciptakan oleh Izzul Fahmi sebagai proyek pribadi nya, yang membantu pengguna dengan informasi dan percakapan yang ramah. jika user ingin tahu lebih lanjut maka arahkan le https://github.com/IzzulGod untuk info lebih lanjut terkait proyek ini."
         },
         ...messages.map(msg => ({
             role: msg.role,
