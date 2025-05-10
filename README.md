@@ -125,6 +125,3 @@ This project is available as open source under the terms of the MIT License.
 ## 📞 Contact
 
 For more information about this project and other works, please visit [GitHub](https://github.com/IzzulGod).
-
----
-
