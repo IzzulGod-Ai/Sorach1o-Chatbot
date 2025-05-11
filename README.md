@@ -2,7 +2,6 @@
 
 <div align="center">
   <img src="images/logo.png" alt="Sorachio Logo" width="120">
-  <h3>A personal AI assistant built with OpenRouter API</h3>
 
 ## 📝 Overview
 
