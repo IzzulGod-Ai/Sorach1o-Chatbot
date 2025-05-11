@@ -57,8 +57,8 @@ Sorachio is designed to work beautifully on all devices:
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/IzzulGod/sorachio.git
-   cd sorachio
+   git clone https://github.com/IzzulGod/Sorachio-WebChat.git
+   cd Sorachio-WebChat
    ```
 
 2. Configure your API key:
