@@ -3,8 +3,6 @@
 <div align="center">
   <img src="images/logo.png" alt="Sorachio Logo" width="120">
 
-## 📝 Overview
-
 Sorachio is a responsive web-based AI assistant that leverages the DeepSeek Chat model through OpenRouter's API. It provides an intuitive chat interface similar to popular AI assistants while maintaining conversation history and context.
 
 ## ✨ Features
