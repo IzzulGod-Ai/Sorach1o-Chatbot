@@ -1,7 +1,7 @@
 # Sorachio - AI Assistant
 
 <div align="center">
-  <img src="images/20250509_062745.png" alt="Sorachio Logo" width="240">
+  <img src="images/20250509_062745.png" alt="Sorachio Logo" width="472">
 </div>
 
 
