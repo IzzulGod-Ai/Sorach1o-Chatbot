@@ -110,7 +110,7 @@ You can easily customize Sorachio by:
 
 This project is available as open source under the terms of the MIT License.
 
-## 🙏 Acknowledgements
+##  Acknowledgements
 
 - [OpenRouter](https://openrouter.ai/) for API access
 - [DeepSeek](https://www.deepseek.com/) for the language model
@@ -118,7 +118,3 @@ This project is available as open source under the terms of the MIT License.
 - [marked.js](https://marked.js.org/) for markdown parsing
 - [KaTeX](https://katex.org/) for math rendering
 - [Font Awesome](https://fontawesome.com/) for icons
-
-## 📞 Contact
-
-For more information about this project and other works, please visit [GitHub](https://github.com/IzzulGod).
