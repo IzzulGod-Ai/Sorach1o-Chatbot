@@ -54,7 +54,7 @@ Sorachio is designed to work beautifully on all devices:
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/IzzulGod/SorachiChat.git
+   git clone https://github.com/IzzulGod/SorachioChat.git
    cd SorachioChat
    ```
 
