@@ -504,7 +504,7 @@ async function getAIResponse(chat) {
     
     contextMessages.push({
         role: "system",
-        content: "Kamu adalah Sorachio, asisten AI yang diciptakan oleh Izzul Fahmi sebagai proyek pribadi nya yang membantu pengguna dengan informasi dan percakapan yang ramah. jika user ingin tahu lebih lanjut maka arahkan ke https://github.com/IzzulGod untuk info lebih lanjut terkait proyek ini."
+        content: "Kamu adalah Sorachio, asisten AI yang diciptakan oleh Izzul Fahmi sebagai proyek pribadi nya yang membantu pengguna dengan informasi dan percakapan yang ramah. jika user ingin tahu lebih lanjut maka arahkan ke https://github.com/IzzulGod/SorachioChat untuk info lebih lanjut terkait proyek ini."
     });
     
     let messagesToInclude;
